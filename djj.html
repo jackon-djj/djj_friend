@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 适配手机屏幕 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>专属温馨祝福</title>
+    <style>
+        /* 全局样式：隐藏滚动条，确保全屏 */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f5f5f5;
+            font-family: "微软雅黑", sans-serif;
+        }
+
+        /* 祝福窗口样式 */
+        .blessing-box {
+            position: absolute; /* 随机定位 */
+            padding: 15px;
+            border-radius: 12px; /* 圆角更美观 */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* 阴影增加立体感 */
+            z-index: 9999; /* 确保在最上层 */
+            animation: fadeIn 0.5s ease-out; /* 弹出动画 */
+            max-width: 220px; /* 适配手机宽度 */
+            word-wrap: break-word; /* 自动换行 */
+        }
+
+        /* 祝福文字样式 */
+        .blessing-text {
+            font-size: 16px;
+            text-align: center;
+            color: #333;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* 弹出动画：从透明到不透明 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* 消失动画：从不透明到透明 */
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s ease-in;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // 祝福文案（保留原列表，适配手机显示）
+        const blessings = [
+            '多吃点哦~',
+            '多穿点衣服哦~',
+            '保持微笑呀',
+            '每天都要元气满满',
+            '保持好心情',
+            '好好爱自己',
+            '梦想成真',
+            '期待下一次见面',
+            '顺顺利利',
+            '每天都要开开心心的',
+            '愿所有烦恼都消失',
+            '别熬夜',
+            '不长痘',
+            '今天过得开心嘛',
+            '天冷了，该喝热咖啡了！',
+            '财源广进',
+            '一夜暴富',
+            '记得吃水果',
+            '平安顺遂，就是最好的日子～',
+            '加油！你离目标更近啦～',
+            '事业顺利，收获满满！',
+            '一起加油，成为更好的人！',
+            '学业顺利，早日发Nature'
+        ];
+
+        // 背景颜色（保留原配色，更柔和）
+        const bgColors = [
+            'lightpink', 'skyblue', 'lightgreen', 'lavender', 'lightyellow',
+            'plum', 'coral', 'bisque', 'aquamarine', 'mistyrose', 'honeydew',
+            'peachpuff', 'paleturquoise', 'lavenderblush', 'oldlace', 'lemonchiffon'
+        ];
+
+        // 窗口数量（手机端建议50-80个，避免过于拥挤）
+        const windowCount = 80;
+        // 每个窗口显示时间（6秒，和原代码一致）
+        const showDuration = 6000;
+        // 窗口弹出间隔（20毫秒，快速弹出）
+        const popInterval = 20;
+
+        // 获取手机屏幕宽高（适配所有手机）
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        // 创建祝福窗口函数
+        function createBlessingBox() {
+            // 1. 创建窗口元素
+            const box = document.createElement('div');
+            box.className = 'blessing-box';
+
+            // 2. 随机选择祝福文案和背景色
+            const randomBlessing = blessings[Math.floor(Math.random() * blessings.length)];
+            const randomBgColor = bgColors[Math.floor(Math.random() * bgColors.length)];
+
+            // 3. 设置窗口内容和样式
+            box.innerHTML = `<p class="blessing-text">${randomBlessing}</p>`;
+            box.style.backgroundColor = randomBgColor;
+
+            // 4. 随机定位（确保窗口完全在屏幕内）
+            const boxWidth = box.offsetWidth || 220; // 窗口宽度（默认220）
+            const boxHeight = box.offsetHeight || 80; // 窗口高度（默认80）
+            const randomX = Math.floor(Math.random() * (screenWidth - boxWidth));
+            const randomY = Math.floor(Math.random() * (screenHeight - boxHeight));
+            box.style.left = `${randomX}px`;
+            box.style.top = `${randomY}px`;
+
+            // 5. 添加到页面
+            document.body.appendChild(box);
+
+            // 6. 定时消失（先执行消失动画，再删除元素）
+            setTimeout(() => {
+                box.classList.add('fade-out'); // 添加消失动画
+                setTimeout(() => {
+                    document.body.removeChild(box); // 动画结束后删除
+                }, 500); // 与消失动画时长一致
+            }, showDuration);
+        }
+
+        // 批量创建窗口（按间隔弹出）
+        let createdCount = 0;
+        const popTimer = setInterval(() => {
+            if (createdCount < windowCount) {
+                createBlessingBox();
+                createdCount++;
+            } else {
+                clearInterval(popTimer); // 创建完所有窗口后停止
+            }
+        }, popInterval);
+    </script>
+</body>
+</html>
